@@ -1,4 +1,4 @@
-namespace demo2025_razor_mvc.Models
+namespace demo2025_razor.Models
 {
     public class ErrorViewModel
     {

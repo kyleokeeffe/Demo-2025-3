@@ -1,0 +1,119 @@
+﻿@using demo2025_razor.ViewModels
+<!--TODO: import jquery datatable-->
+<!--TODO: Write ajax call to update only table partial-->
+<!--TODO: Create API servere side to handle data calls-->
+
+@{
+    ViewData["Title"] = "Privacy Policy";
+}
+@model ProductsPageViewModel
+
+
+
+@section Scripts {
+    <script>
+
+        $(document).ready( function () {
+            $('#myTable').DataTable({
+                paging:true
+            });
+        } );
+    </script>
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>Use this page to detail your site's privacy policy.</p>
+<label>User: @Model.Customer.FullName</label>
+<br />
+<label>
+    Role: @Model.Customer.Role
+</label>
+
+<input type="text" id="txtOne" />
+
+
+
+
+
+
+
+<table id="myTable">
+    <thead>
+
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Renter
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        <@foreach (var product in Model.Products)
+        {
+            <tr>
+                <td>
+                    @product.Id
+                </td>
+                <td>
+                    @product.Description
+                </td>
+                <td>
+                    <input type="checkbox"
+                           class="chkRenter"
+                           @(product.IsActive ? "checked" : "")
+                           data-person-id="@product.Id" />
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+    <script>
+
+        $(document).ready(function(){
+        console.log('yup')});
+           // $('.chkRenter').on('change',function(){
+           //     debugger;
+           //     const chk=$(this);
+           //     const id = chk.data('person-id');
+           //     const isChecked=chk.isChecked;
+           //     onUpdateRenterStatus(id, isChecked);
+           // })
+
+
+
+
+        function onUpdateRenterStatus(id, isActive){
+            $.ajax({
+
+
+                URL:'@Url.Action("UpdateActiveStatus", "Home")',
+                type:'POST',
+                data:{id: id, isActive:isActive},
+                success:function(R){
+                    console.log('succeeded ');
+                    if (R.success==true){
+                        console.log('success');
+                        //refresh data with get
+                    }else if (R.success=false){
+                        console.log('failed');
+                    }
+                },
+                error:function(R){
+                    console.log('failed' + R.message);
+                }
+            })
+
+        }
+    </script>
+
+
+
