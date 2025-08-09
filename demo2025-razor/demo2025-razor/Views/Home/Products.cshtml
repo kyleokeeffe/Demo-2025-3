@@ -10,16 +10,7 @@
 
 
 
-@section Scripts {
-    <script>
 
-        $(document).ready( function () {
-            $('#myTable').DataTable({
-                paging:true
-            });
-        } );
-    </script>
-}
 <h1>@ViewData["Title"]</h1>
 
 <p>Use this page to detail your site's privacy policy.</p>
@@ -54,7 +45,7 @@
     </thead>
     <tbody>
 
-        <@foreach (var product in Model.Products)
+        @foreach (var product in Model.Products)
         {
             <tr>
                 <td>
@@ -65,9 +56,9 @@
                 </td>
                 <td>
                     <input type="checkbox"
-                           class="chkRenter"
+                           class="chkIsActive"
                            @(product.IsActive ? "checked" : "")
-                           data-person-id="@product.Id" />
+                           data-product-id="@product.Id" />
                 </td>
 
             </tr>
@@ -75,35 +66,33 @@
     </tbody>
 </table>
 
+@section Scripts{
 
     <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                paging: true
+            });
 
-        $(document).ready(function(){
-        console.log('yup')});
-           // $('.chkRenter').on('change',function(){
-           //     debugger;
-           //     const chk=$(this);
-           //     const id = chk.data('person-id');
-           //     const isChecked=chk.isChecked;
-           //     onUpdateRenterStatus(id, isChecked);
-           // })
+            $(document).on('change', '.chkIsActive', function(){
+                debugger;
+                const chk = $(this);
+                const id = chk.data('product-id');
+                const isChecked = chk.prop('checked');
+                UpdateActiveStatus(id, isChecked);
+            });
+        });
 
-
-
-
-        function onUpdateRenterStatus(id, isActive){
+        function UpdateActiveStatus(id, isActive){
             $.ajax({
-
-
-                URL:'@Url.Action("UpdateActiveStatus", "Home")',
+                url:'@Url.Action("UpdateActiveStatus", "Home")',
                 type:'POST',
                 data:{id: id, isActive:isActive},
                 success:function(R){
                     console.log('succeeded ');
                     if (R.success==true){
                         console.log('success');
-                        //refresh data with get
-                    }else if (R.success=false){
+                    }else if (R.success==false){
                         console.log('failed');
                     }
                 },
@@ -111,9 +100,9 @@
                     console.log('failed' + R.message);
                 }
             })
-
         }
     </script>
+}
 
 
 
