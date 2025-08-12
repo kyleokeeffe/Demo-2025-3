@@ -1,3 +1,4 @@
+using demo2025_razor.Interfaces;
 using demo2025_razor.Models;
 using demo2025_razor.Repositories;
 using demo2025_razor.ViewModels;
@@ -9,10 +10,12 @@ namespace demo2025_razor.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private ProductsRepository productsRepository = new ProductsRepository();
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IProductsRepository _productsRepository;
+
+        public HomeController(ILogger<HomeController> logger, IProductsRepository productsRepository)
         {
             _logger = logger;
+            _productsRepository = productsRepository;
         }
 
         public IActionResult Index()
@@ -29,7 +32,7 @@ namespace demo2025_razor.Controllers
         {
             var viewModel = new ProductsPageViewModel
             {
-               Products = productsRepository.Products.ToList(),
+               Products = _productsRepository.Products.ToList(),
                Customer = new CustomerViewModel { Id = 4, FName = "Kyle", LName="Smith", FullName="Kyle Smith", Role = "Guy" }
 
             };
@@ -39,7 +42,7 @@ namespace demo2025_razor.Controllers
         [HttpGet]
         public IActionResult GetProductsTableData()
         {
-            var products = productsRepository.Products.ToList();
+            var products = _productsRepository.Products.ToList();
             return PartialView("_ProductsTable", products);
         }
 
@@ -52,14 +55,14 @@ namespace demo2025_razor.Controllers
                 //if found person,
                 //   set to new status, 
                 //   save context
-                var product = productsRepository.Products.Where(x => x.Id == id).FirstOrDefault();
+                var product = _productsRepository.Products.Where(x => x.Id == id).FirstOrDefault();
 
                 if (product != null)
                 {
                     product.IsActive = isActive;
                     
                     // Return success with updated products data
-                    var updatedProducts = productsRepository.Products.ToList();
+                    var updatedProducts = _productsRepository.Products.ToList();
                     return Json(new { 
                         success = true, 
                         message = "Product has been updated.",

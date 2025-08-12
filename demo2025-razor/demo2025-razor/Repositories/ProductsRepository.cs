@@ -1,8 +1,9 @@
-﻿using demo2025_razor.ViewModels;
+﻿using demo2025_razor.Interfaces;
+using demo2025_razor.ViewModels;
 
 namespace demo2025_razor.Repositories
 {
-    public class ProductsRepository
+    public class ProductsRepository:IProductsRepository
     {
         private static List<ProductViewModel>? _staticProducts;
         private IQueryable<ProductViewModel>? _products;

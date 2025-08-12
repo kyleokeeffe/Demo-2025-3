@@ -1,8 +1,11 @@
+using demo2025_razor.Interfaces;
+using demo2025_razor.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
