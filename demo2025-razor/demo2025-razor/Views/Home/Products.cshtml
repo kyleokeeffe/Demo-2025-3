@@ -8,98 +8,75 @@
 }
 @model ProductsPageViewModel
 
-
-
-
 <h1>@ViewData["Title"]</h1>
 
 <p>Use this page to detail your site's privacy policy.</p>
 <label>User: @Model.Customer.FullName</label>
 <br />
-<label>
-    Role: @Model.Customer.Role
-</label>
+<label>Role: @Model.Customer.Role</label>
 
 <input type="text" id="txtOne" />
 
-
-
-
-
-
-
-<table id="myTable">
-    <thead>
-
-        <tr>
-            <th>
-                ID
-            </th>
-            <th>
-                Name
-            </th>
-            <th>
-                Renter
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-
-        @foreach (var product in Model.Products)
-        {
-            <tr>
-                <td>
-                    @product.Id
-                </td>
-                <td>
-                    @product.Description
-                </td>
-                <td>
-                    <input type="checkbox"
-                           class="chkIsActive"
-                           @(product.IsActive ? "checked" : "")
-                           data-product-id="@product.Id" />
-                </td>
-
-            </tr>
-        }
-    </tbody>
-</table>
+<div id="productsTableContainer">
+    @await Html.PartialAsync("_ProductsTable", Model.Products)
+</div>
 
 @section Scripts{
-
     <script>
         $(document).ready(function () {
-            $('#myTable').DataTable({
-                paging: true
-            });
-
-            $(document).on('change', '.chkIsActive', function(){
-                debugger;
-                const chk = $(this);
-                const id = chk.data('product-id');
-                const isChecked = chk.prop('checked');
-                UpdateActiveStatus(id, isChecked);
-            });
+            initializeDataTable();
+            $(document).on('change', '.chkIsActive', onChkChanged);
         });
 
-        function UpdateActiveStatus(id, isActive){
+        function initializeDataTable() {
+            $('#myTable').DataTable({
+                paging: true,
+                destroy: true
+            });
+        }
+
+        function onChkChanged() {
+            var chk = $(this);
+            var chkIsChecked = chk.is(':checked');
+            const id = chk.data('product-id');
+
+            UpdateActiveStatus(id, chkIsChecked);
+        }
+
+        function UpdateActiveStatus(id, isActive) {
             $.ajax({
-                url:'@Url.Action("UpdateActiveStatus", "Home")',
-                type:'POST',
-                data:{id: id, isActive:isActive},
-                success:function(R){
-                    console.log('succeeded ');
-                    if (R.success==true){
+                url: '@Url.Action("UpdateActiveStatus", "Home")',
+                type: 'POST',
+                data: { id: id, isActive: isActive },
+                success: function (R) {
+                    console.log('succeeded');
+                    if (R.success == true) {
                         console.log('success');
-                    }else if (R.success==false){
-                        console.log('failed');
+                        refreshProductsTable();
+                    } else if (R.success == false) {
+                        console.log('failed: ' + R.message);
+                        $('[data-product-id="' + id + '"]').prop('checked', !isActive);
                     }
                 },
-                error:function(R){
-                    console.log('failed' + R.message);
+                error: function (R) {
+                    console.log('failed: ' + R.message);
+                    $('[data-product-id="' + id + '"]').prop('checked', !isActive);
                 }
-            })
+            });
+        }
+
+        function refreshProductsTable() {
+            $.ajax({
+                url: '@Url.Action("GetProductsTableData", "Home")',
+                type: 'GET',
+                success: function (data) {
+                    $('#productsTableContainer').html(data);
+                    initializeDataTable();
+                },
+                error: function () {
+                    console.log('Failed to refresh table data');
+                }
+            });
         }
     </script>
 }

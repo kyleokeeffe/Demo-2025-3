@@ -1,0 +1,26 @@
+@model List<demo2025_razor.ViewModels.ProductViewModel>
+
+<table id="myTable">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Renter</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Id</td>
+                <td>@product.Description</td>
+                <td>
+                    <input type="checkbox"
+                           class="chkIsActive"
+                           @(product.IsActive ? "checked" : "")
+                           data-product-id="@product.Id" />
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
