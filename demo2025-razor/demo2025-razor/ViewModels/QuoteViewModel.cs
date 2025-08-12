@@ -2,7 +2,9 @@
 {
     public class QuoteViewModel
     {
-        public string CustomerId {  get; set; }
-        public List<ProductViewModel> Products { get; set; }
+        public string Id {  get; set; }
+        public string Name { get; set; }
+        public List<QuoteProductViewModel> QuoteProducts { get; set; }
+        
     }
 }

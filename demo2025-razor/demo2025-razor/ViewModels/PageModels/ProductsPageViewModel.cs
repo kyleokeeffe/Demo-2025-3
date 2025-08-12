@@ -1,4 +1,4 @@
-﻿namespace demo2025_razor.ViewModels
+﻿namespace demo2025_razor.ViewModels.PageModels
 {
     public class ProductsPageViewModel
     {
