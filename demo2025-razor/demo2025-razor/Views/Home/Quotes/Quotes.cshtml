@@ -4,7 +4,7 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    ViewData["Titel"] = "Quotes";
+    ViewData["Title"] = "Quotes";
 }
 @model QuotesPageViewModel
 
@@ -19,9 +19,12 @@
 
 
 <div id="quotesTableContainer">
-    @await Html.PartialAsync("_QuotesTable", Model.Quotes)
+    @await Html.PartialAsync("~/Views/Home/Quotes/_QuotesTable.cshtml", Model.Quotes)
 </div>
-
+<div>
+    <button id="btnAddNewQuote" onclick="onAddNewQuoteClicked">Add Quote</button>
+    <input type="text" id="txtNewQuoteName" />
+</div>
 <div id="productsTableContainer">
 
 
@@ -31,12 +34,71 @@
 @section Scripts{
     <script>
         $(document).ready(function(){
-            initializeDataTables();
+            initializeQuoteDataTable();
             
         });
 
-        function initializeDataTables(){
-            $()
+        function initializeQuoteDataTable(){
+                  $('#tblQuotes').DataTable({
+                paging: true,
+                destroy: true
+            });
         }
+        function onAddNewQuoteClicked(){
+            //show modal
+           var txtVal = $(txtNewQuoteName).val();
+           AddNewQuote(txtVal);
+
+        }
+        function AddNewQuote(txtVal) {
+            // Logic to add a new quote
+             $.ajax({
+                url: '@Url.Action("AddNewQuote", "Home")',
+                type: 'POST',
+                data: { name: txtVal},
+                success: function (R) {
+                    console.log('succeeded');
+                    if (R.success == true) {
+                        console.log('success');
+                        refreshQuotesTable(R.quotes);
+                    } else if (R.success == false) {
+                        console.log('failed: ' + R.message);
+                        //$('[data-product-id="' + id + '"]').prop('checked', !isActive);
+                    }
+                },
+                error: function (R) {
+                    console.log('failed: ' + R.message);
+                    $('[data-product-id="' + id + '"]').prop('checked', !isActive);
+                }
+            });
+
+
+            console.log("Add New Quote button clicked");
+            // You can implement the logic to open a modal or redirect to a new page for adding a quote
+        }
+
+         function refreshQuotesTable() {
+            $.ajax({
+                url: '@Url.Action("GetQuotesTableData", "Home")',
+                type: 'GET',
+                success: function (data) {
+                    $('#quotesTableContainer').html(data);
+                    initializeQuoteDataTable();
+                },
+                error: function () {
+                    console.log('Failed to refresh table data');
+                }
+            });
+        }
+        function refreshQuotesTable(data) {
+           
+            $('#quotesTableContainer').html(data);
+            initializeQuoteDataTable();
+               
+            
+        }
+
+  
+        
     </script>
 }

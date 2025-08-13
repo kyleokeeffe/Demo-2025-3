@@ -5,7 +5,7 @@
 <!--TODO: Create API servere side to handle data calls-->
 
 @{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = "Products";
 }
 @model ProductsPageViewModel
 
@@ -19,7 +19,7 @@
 <input type="text" id="txtOne" />
 
 <div id="productsTableContainer">
-    @await Html.PartialAsync("_ProductsTable", Model.Products)
+    @await Html.PartialAsync("~/Views/Home/Products/_ProductsTable.cshtml", Model.Products)
 </div>
 
 @section Scripts{
