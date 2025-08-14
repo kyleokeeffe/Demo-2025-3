@@ -42,10 +42,12 @@ namespace demo2025_razor.Controllers
 
         public IActionResult Quotes()
         {
+            var customer = new CustomerViewModel { Id = 4, FName = "Kyle", LName = "Smith", FullName = "Kyle Smith", Role = "Guy" };
             var viewModel = new QuotesPageViewModel
             {
-                Quotes = _repo.Quotes.ToList(),
-                Customer = new CustomerViewModel { Id = 4, FName = "Kyle", LName = "Smith", FullName = "Kyle Smith", Role = "Guy" }
+                Quotes = _repo.Quotes,
+                Customer = customer,
+                QuoteProducts = _repo.QuoteProducts.Where(x=>x.Quote.Customer.Id==customer.Id)
             };
             return View("~/Views/Home/Quotes/Quotes.cshtml", viewModel);
         }

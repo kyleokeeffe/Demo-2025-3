@@ -4,7 +4,8 @@
     {
         public string Id {  get; set; }
         public string Name { get; set; }
-        public List<QuoteProductViewModel> QuoteProducts { get; set; }
+        public CustomerViewModel Customer { get; set; }
+        public IQueryable<QuoteProductViewModel> QuoteProducts { get; set; }
         
     }
 }

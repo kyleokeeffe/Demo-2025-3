@@ -3,6 +3,7 @@
     public class QuoteProductViewModel
     {
         public int Id { get; set; }
+        public QuoteViewModel Quote { get; set; }
         public ProductViewModel Product { get; set; }
         public double CustomPrice { get; set; }
     }
