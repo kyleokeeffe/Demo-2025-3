@@ -4,14 +4,15 @@
 *@
 @{
 }
-@model List<ProductViewModel>
+@model List<QuoteProductViewModel>
 
-<table id="tblQuotes">
+<table id="tblQuoteProducts">
     <thead>
         <tr>
             <th>ID</th>
-            <th>Name</th>
-            <th>Renter</th>
+            <th>Product</th>
+            <th>Custom Price</th>
+            <th>Quote</th>
         </tr>
     </thead>
     <tbody>
@@ -19,12 +20,14 @@
         {
             <tr>
                 <td>@quote.Id</td>
-                <td>@quote. Description</td>
+                <td>@quote.Product</td>
+                <td>@quote.CustomPrice</td>
                 <td>
                  
 
                     <select id="selectQuotes">
-                        <option></option>
+                        <option value="A">A.</option>
+                        <option value="B">B.</option>
                     </select>
                 </td>
             </tr>

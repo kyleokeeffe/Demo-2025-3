@@ -22,10 +22,11 @@
     @await Html.PartialAsync("~/Views/Home/Quotes/_QuotesTable.cshtml", Model.Quotes)
 </div>
 <div>
-    <button id="btnAddNewQuote" onclick="onAddNewQuoteClicked">Add Quote</button>
+    <button id="btnAddNewQuote">Add Quote</button>
     <input type="text" id="txtNewQuoteName" />
 </div>
 <div id="productsTableContainer">
+    @await Html.PartialAsync("~/Views/Home/Quotes/_QuotesProductsTable.cshtml", Model.QuoteProducts)
 
 
 </div>
@@ -35,7 +36,8 @@
     <script>
         $(document).ready(function(){
             initializeQuoteDataTable();
-            
+            initializeQuoteProductsDataTable();
+            $('#btnAddNewQuote').on('click', function(){onAddNewQuoteClicked();});
         });
 
         function initializeQuoteDataTable(){
@@ -44,9 +46,15 @@
                 destroy: true
             });
         }
+         function initializeQuoteProductsDataTable(){
+                  $('#tblQuoteProducts').DataTable({
+                paging: true,
+                destroy: true
+            });
+        }
         function onAddNewQuoteClicked(){
             //show modal
-           var txtVal = $(txtNewQuoteName).val();
+           var txtVal = $('#txtNewQuoteName').val();
            AddNewQuote(txtVal);
 
         }
@@ -59,8 +67,8 @@
                 success: function (R) {
                     console.log('succeeded');
                     if (R.success == true) {
-                        console.log('success');
-                        refreshQuotesTable(R.quotes);
+                        console.log('success:'+R.message);
+                        refreshQuotesTable();
                     } else if (R.success == false) {
                         console.log('failed: ' + R.message);
                         //$('[data-product-id="' + id + '"]').prop('checked', !isActive);
@@ -78,7 +86,7 @@
         }
 
          function refreshQuotesTable() {
-            $.ajax({
+             $.ajax({
                 url: '@Url.Action("GetQuotesTableData", "Home")',
                 type: 'GET',
                 success: function (data) {
@@ -90,13 +98,7 @@
                 }
             });
         }
-        function refreshQuotesTable(data) {
-           
-            $('#quotesTableContainer').html(data);
-            initializeQuoteDataTable();
-               
-            
-        }
+       
 
   
         

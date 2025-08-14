@@ -7,8 +7,10 @@ namespace demo2025_razor.Repositories
     {
         private static List<ProductViewModel>? staticProducts;
         private static List<QuoteViewModel>? staticQuotes;
+        private static List<QuoteProductViewModel>? staticQuoteProducts;
         private IQueryable<ProductViewModel>? products;
         private IQueryable<QuoteViewModel>? quotes;
+        private IQueryable<QuoteProductViewModel>? quoteProducts;
 
         public IQueryable<ProductViewModel>? Products
         {
@@ -40,7 +42,22 @@ namespace demo2025_razor.Repositories
                 quotes = value;
             }
         }
-      
+        public IQueryable<QuoteProductViewModel>? QuoteProducts
+        {
+            get
+            {
+                if (quoteProducts == null)
+                {
+                    QuoteProductsInit();
+                }
+                return quoteProducts;
+            }
+            set
+            {
+                quoteProducts = value;
+            }
+        }
+
         private void ProductsInit()
         {
             if (staticProducts == null)
@@ -57,6 +74,14 @@ namespace demo2025_razor.Repositories
             }
             this.Quotes = staticQuotes.AsQueryable();
         }
+        private void QuoteProductsInit()
+        {
+            if (staticQuoteProducts == null)
+            {
+                staticQuoteProducts = GetInitialQuoteProducts();
+            }
+            this.QuoteProducts = staticQuoteProducts.AsQueryable();
+        }
         private List<ProductViewModel> GetInitialProducts()
         {
             return new List<ProductViewModel>
@@ -69,6 +94,15 @@ namespace demo2025_razor.Repositories
         private List<QuoteViewModel> GetInitialQuotes()
         {
             return new List<QuoteViewModel>();
+            //{
+            //    new QuoteViewModel{Id = 1 ,ItemCd="A1", Description="One",IsActive=false},
+            //    new QuoteViewModel{ Id = 2, ItemCd = "A2", Description="Two",IsActive=true },
+            //    new QuoteViewModel{ Id = 3, ItemCd = "A3", Description="Three",IsActive=false }
+            //};
+        }
+        private List<QuoteProductViewModel> GetInitialQuoteProducts()
+        {
+            return new List<QuoteProductViewModel>();
             //{
             //    new QuoteViewModel{Id = 1 ,ItemCd="A1", Description="One",IsActive=false},
             //    new QuoteViewModel{ Id = 2, ItemCd = "A2", Description="Two",IsActive=true },

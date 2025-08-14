@@ -63,6 +63,13 @@ namespace demo2025_razor.Controllers
             var quotes = _repo.Quotes.ToList();
             return PartialView("~/Views/Home/Quotes/_QuotesTable.cshtml", quotes);
         }
+        [HttpGet]
+        public IActionResult GetQuoteProductsTableData()
+        {
+            var quoteProducts = _repo.QuoteProducts.ToList();
+            return PartialView("~/Views/Home/Quotes/_QuoteProductsTable.cshtml", quoteProducts);
+        }
+
 
         [HttpPost]
         public IActionResult UpdateActiveStatus(int id, bool isActive)
@@ -107,17 +114,19 @@ namespace demo2025_razor.Controllers
                 //if found person,
                 //   set to new status, 
                 //   save context 
-                var updatedQuotes=_repo.AddNewQuote(new QuoteViewModel { 
+                _repo.AddNewQuote(new QuoteViewModel { 
                     Id = _repo.Quotes.Max(q => q.Id) + 1, 
-                    Name = name }).ToList();
+                    Name = name });
                
-                    // Return success with updated products data
-                    return Json(new
+                    // Return success
+
+                    var response =  Json(new
                     {
                         success = true,
-                        message = "Quote has been updated.",
-                        quotes = updatedQuotes
+                        message = "Quote has been updated."
+                        
                     });
+                return response;
                // }
                // else
                //     return Json(new { success = false, message = "Product not found." });

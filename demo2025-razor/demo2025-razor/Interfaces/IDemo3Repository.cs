@@ -6,6 +6,7 @@ namespace demo2025_razor.Interfaces
     {
         public IQueryable<ProductViewModel>? Products { get; set; }
         public IQueryable<QuoteViewModel>? Quotes { get; set; }
+        public IQueryable<QuoteProductViewModel>? QuoteProducts { get; set; }
         public IQueryable<QuoteViewModel> AddNewQuote(QuoteViewModel quote);
     }
 }
