@@ -8,10 +8,11 @@ namespace demo2025_razor.Repositories
         private static List<ProductViewModel>? staticProducts;
         private static List<QuoteViewModel>? staticQuotes;
         private static List<QuoteProductViewModel>? staticQuoteProducts;
+        private static List<CustomerViewModel>? staticCustomers;
         private IQueryable<ProductViewModel>? products;
         private IQueryable<QuoteViewModel>? quotes;
         private IQueryable<QuoteProductViewModel>? quoteProducts;
-
+        private IQueryable<CustomerViewModel>? customers;
         public IQueryable<ProductViewModel>? Products
         {
             get
@@ -57,7 +58,21 @@ namespace demo2025_razor.Repositories
                 quoteProducts = value;
             }
         }
-
+        public IQueryable<CustomerViewModel>? Customers
+        {
+            get
+            {
+                if (customers == null)
+                {
+                    CustomersInit();
+                }
+                return customers;
+            }
+            set
+            {
+                customers = value;
+            }
+        }
         private void ProductsInit()
         {
             if (staticProducts == null)
@@ -82,12 +97,21 @@ namespace demo2025_razor.Repositories
             }
             this.QuoteProducts = staticQuoteProducts.AsQueryable();
         }
+        private void CustomersInit()
+        {
+            
+            if (staticCustomers == null)
+            {
+                staticCustomers = GetInitialCustomers();
+            }
+            this.Customers = staticCustomers.AsQueryable();
+        }
         private List<ProductViewModel> GetInitialProducts()
         {
             return new List<ProductViewModel>
             {
                 new ProductViewModel{Id= 1,ItemCd="A1", Description="One",IsActive=false},
-                new ProductViewModel{ Id = 2, ItemCd = "A2", Description="Two",IsActive=true },
+                new ProductViewModel{ Id = 2, ItemCd = "A2", Description="Two",IsActive=false },
                 new ProductViewModel{ Id = 3, ItemCd = "A3", Description="Three",IsActive=false }
             };
         }
@@ -109,13 +133,27 @@ namespace demo2025_razor.Repositories
             //    new QuoteViewModel{ Id = 3, ItemCd = "A3", Description="Three",IsActive=false }
             //};
         }
-        public IQueryable<QuoteViewModel> AddNewQuote(QuoteViewModel quote)
+        private List<CustomerViewModel>? GetInitialCustomers()
+        {
+            return new List<CustomerViewModel>
+            {
+               new CustomerViewModel { Id = 4, FName = "Kyle", LName = "Smith", FullName = "Kyle Smith", Role = "Guy" }
+
+            };
+        }
+        public void AddNewQuote(QuoteViewModel quote)
         {
    
             staticQuotes.Add(quote);
-            return staticQuotes.AsQueryable();
+           // return staticQuotes.AsQueryable();
            
         }
+        public void AddNewQuoteProduct(QuoteProductViewModel quoteProduct)
+        {
 
+            staticQuoteProducts.Add(quoteProduct);
+            // return staticQuotes.AsQueryable();
+
+        }
     }
 }

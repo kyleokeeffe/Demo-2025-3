@@ -3,7 +3,7 @@
     public class ProductsPageViewModel
     {
 
-        public List<ProductViewModel> Products { get; set; }
+        public IQueryable<ProductViewModel> Products { get; set; }
         public CustomerViewModel Customer { get; set; }
     }
 }

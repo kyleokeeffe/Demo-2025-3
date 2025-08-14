@@ -3,6 +3,7 @@ using demo2025_razor.Models;
 using demo2025_razor.Repositories;
 using demo2025_razor.ViewModels;
 using demo2025_razor.ViewModels.PageModels;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -33,8 +34,8 @@ namespace demo2025_razor.Controllers
         {
             var viewModel = new ProductsPageViewModel
             {
-               Products = _repo.Products.ToList(),
-               Customer = new CustomerViewModel { Id = 4, FName = "Kyle", LName="Smith", FullName="Kyle Smith", Role = "Guy" }
+               Products = _repo.Products,
+               Customer = _repo.Customers.Where(x=>x.Id==4).FirstOrDefault()
 
             };
             return View("~/Views/Home/Products/Products.cshtml", viewModel);
@@ -55,26 +56,26 @@ namespace demo2025_razor.Controllers
         [HttpGet]
         public IActionResult GetProductsTableData()
         {
-            var products = _repo.Products.ToList();
+            var products = _repo.Products;
             return PartialView("~/Views/Home/Products/_ProductsTable.cshtml", products);
         }
 
         [HttpGet]
         public IActionResult GetQuotesTableData()
         {
-            var quotes = _repo.Quotes.ToList();
+            var quotes = _repo.Quotes;
             return PartialView("~/Views/Home/Quotes/_QuotesTable.cshtml", quotes);
         }
         [HttpGet]
         public IActionResult GetQuoteProductsTableData()
         {
-            var quoteProducts = _repo.QuoteProducts.ToList();
+            var quoteProducts = _repo.QuoteProducts;
             return PartialView("~/Views/Home/Quotes/_QuoteProductsTable.cshtml", quoteProducts);
         }
 
 
         [HttpPost]
-        public IActionResult UpdateActiveStatus(int id, bool isActive)
+        public IActionResult UpdateActiveStatus(int id, bool isActive, int customerId)
         {
             try
             {
@@ -87,13 +88,30 @@ namespace demo2025_razor.Controllers
                 if (product != null)
                 {
                     product.IsActive = isActive;
-                    
+
                     // Return success with updated products data
-                    var updatedProducts = _repo.Products.ToList();
+                    //var updatedProducts = _repo.Products.ToList();
+                    try
+                    {
+
+                    var Id = _repo.QuoteProducts.Max(x => x.Id) + 1;//TODO: kyle, need to initialize quoteProducts repo prior to quotes page load
+                        var customer = _repo.Customers.Where(x => x.Id == customerId).FirstOrDefault();
+                    }catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
+
+
+                    var newQuoteProduct = new QuoteProductViewModel
+                    {
+                        Id = _repo.QuoteProducts==null?1:_repo.QuoteProducts.Max(x => x.Id) + 1,
+                        Customer = _repo.Customers.Where(x => x.Id == customerId).FirstOrDefault()
+                    };
+                    _repo.AddNewQuoteProduct(newQuoteProduct);
+
                     return Json(new { 
                         success = true, 
-                        message = "Product has been updated.",
-                        products = updatedProducts
+                        message = "Product has been updated."
                     });
                 }
                 else

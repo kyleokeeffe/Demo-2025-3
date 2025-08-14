@@ -41,14 +41,14 @@
             var chkIsChecked = chk.is(':checked');
             const id = chk.data('product-id');
 
-            UpdateActiveStatus(id, chkIsChecked);
+            UpdateActiveStatus(id, chkIsChecked, 4);
         }
 
-        function UpdateActiveStatus(id, isActive) {
+        function UpdateActiveStatus(id, isActive, customerId) {
             $.ajax({
                 url: '@Url.Action("UpdateActiveStatus", "Home")',
                 type: 'POST',
-                data: { id: id, isActive: isActive },
+                data: { id: id, isActive: isActive, customerId:customerId },
                 success: function (R) {
                     console.log('succeeded');
                     if (R.success == true) {
