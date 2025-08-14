@@ -16,10 +16,12 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var quote in Model)
+        @if (Model != null)
         {
-            <tr>
-                <td>@quote.Id</td>
+            @foreach (var quote in Model)
+            {
+                <tr>
+                    <td>@quote.Id</td>
                 <td>@quote.Product</td>
                 <td>@quote.CustomPrice</td>
                 <td>
@@ -29,6 +31,16 @@
                         <option value="A">A.</option>
                         <option value="B">B.</option>
                     </select>
+                </td>
+            </tr>
+            }
+
+        }
+        else
+        {
+            <tr>
+                <td colspan="4">
+                    No Quote Products found
                 </td>
             </tr>
         }

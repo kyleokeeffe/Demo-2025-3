@@ -41,14 +41,12 @@
         });
 
         function initializeQuoteDataTable(){
-            debugger;
                   $('#tblQuotes').DataTable({
                 paging: true,
                 destroy: true
             });
         }
          function initializeQuoteProductsDataTable(){
-             debugger;
                   $('#tblQuoteProducts').DataTable({
                 paging: true,
                 destroy: true
@@ -88,7 +86,6 @@
         }
 
          function refreshQuotesTable() {
-             debugger;
              $.ajax({
                 url: '@Url.Action("GetQuotesTableData", "Home")',
                 type: 'GET',

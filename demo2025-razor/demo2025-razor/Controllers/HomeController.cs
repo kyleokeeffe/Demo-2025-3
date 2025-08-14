@@ -34,7 +34,7 @@ namespace demo2025_razor.Controllers
         {
             var viewModel = new ProductsPageViewModel
             {
-               Products = _repo.Products,
+               Products = _repo.Products??Enumerable.Empty<ProductViewModel>().AsQueryable(),
                Customer = _repo.Customers.Where(x=>x.Id==4).FirstOrDefault()
 
             };
@@ -44,11 +44,13 @@ namespace demo2025_razor.Controllers
         public IActionResult Quotes()
         {
             var customer = new CustomerViewModel { Id = 4, FName = "Kyle", LName = "Smith", FullName = "Kyle Smith", Role = "Guy" };
+            
+            
             var viewModel = new QuotesPageViewModel
             {
-                Quotes = _repo.Quotes,
+                Quotes = _repo.Quotes ?? Enumerable.Empty<QuoteViewModel>().AsQueryable(),
                 Customer = customer,
-                QuoteProducts = _repo.QuoteProducts.Where(x=>x.Quote.Customer.Id==customer.Id)
+                QuoteProducts = _repo.QuoteProducts?.Where(x=>x.Customer.Id==customer.Id)??Enumerable.Empty<QuoteProductViewModel>().AsQueryable()?? Enumerable.Empty<QuoteProductViewModel>().AsQueryable()
             };
             return View("~/Views/Home/Quotes/Quotes.cshtml", viewModel);
         }
@@ -83,7 +85,7 @@ namespace demo2025_razor.Controllers
                 //if found person,
                 //   set to new status, 
                 //   save context
-                var product = _repo.Products.Where(x => x.Id == id).FirstOrDefault();
+                var product = _repo.Products?.Where(x => x.Id == id).FirstOrDefault();
 
                 if (product != null)
                 {
@@ -91,24 +93,14 @@ namespace demo2025_razor.Controllers
 
                     // Return success with updated products data
                     //var updatedProducts = _repo.Products.ToList();
-                    try
-                    {
-
-                    var Id = _repo.QuoteProducts.Max(x => x.Id) + 1;//TODO: kyle, need to initialize quoteProducts repo prior to quotes page load
-                        var customer = _repo.Customers.Where(x => x.Id == customerId).FirstOrDefault();
-                    }catch (Exception e)
-                    {
-                        Console.WriteLine(e.Message);
-                    }
 
 
                     var newQuoteProduct = new QuoteProductViewModel
                     {
-                        Id = _repo.QuoteProducts==null?1:_repo.QuoteProducts.Max(x => x.Id) + 1,
+                        Id = _repo.QuoteProducts.Any()? _repo.QuoteProducts.Max(x => x.Id) + 1:1,
                         Customer = _repo.Customers.Where(x => x.Id == customerId).FirstOrDefault()
                     };
                     _repo.AddNewQuoteProduct(newQuoteProduct);
-
                     return Json(new { 
                         success = true, 
                         message = "Product has been updated."
@@ -135,7 +127,7 @@ namespace demo2025_razor.Controllers
                 //   set to new status, 
                 //   save context 
                 _repo.AddNewQuote(new QuoteViewModel { 
-                    Id = _repo.Quotes.Max(q => q.Id) + 1, 
+                    Id = _repo.Quotes.Any()?_repo.Quotes.Max(q => q.Id) + 1:1, 
                     Name = name });
                
                     // Return success
