@@ -18,20 +18,15 @@
     <tbody>
         @if (Model != null)
         {
-            @foreach (var quote in Model)
+            @foreach (var qp in Model)
             {
                 <tr>
-                    <td>@quote.Id</td>
-                <td>@quote.Product</td>
-                <td>@quote.CustomPrice</td>
-                <td>
-                 
-
-                    <select id="selectQuotes">
-                        <option value="A">A.</option>
-                        <option value="B">B.</option>
-                    </select>
-                </td>
+                    <td>@qp.Id</td>
+                    <td>@qp.Product</td>
+                    <td>@qp.CustomPrice</td>
+                    <td>
+                        @await Component.InvokeAsync("QuoteProductQuotesComponent", new {quoteProductId=qp.Id,customerId = qp.Customer.Id})
+                    </td>
             </tr>
             }
 

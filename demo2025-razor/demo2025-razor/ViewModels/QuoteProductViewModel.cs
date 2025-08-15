@@ -1,4 +1,6 @@
-﻿namespace demo2025_razor.ViewModels
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace demo2025_razor.ViewModels
 {
     public class QuoteProductViewModel
     {
@@ -6,6 +8,7 @@
         public CustomerViewModel Customer { get; set; }
         public QuoteViewModel Quote { get; set; }
         public ProductViewModel Product { get; set; }
+        public List<SelectListItem> QuoteOptionItems { get; set; }
         public double CustomPrice { get; set; }
     }
 }

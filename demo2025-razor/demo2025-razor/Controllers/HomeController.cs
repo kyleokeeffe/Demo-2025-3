@@ -5,6 +5,7 @@ using demo2025_razor.ViewModels;
 using demo2025_razor.ViewModels.PageModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
 
 namespace demo2025_razor.Controllers
@@ -74,7 +75,15 @@ namespace demo2025_razor.Controllers
             var quoteProducts = _repo.QuoteProducts;
             return PartialView("~/Views/Home/Quotes/_QuoteProductsTable.cshtml", quoteProducts);
         }
+        [HttpGet]
+        public IActionResult GetQuoteProductQuoteSelect(int customerId)
+        {
+            var quoteSelectItems = _repo.Quotes
+                .Where(x=>x.Customer.Id==customerId)
+                .Select(x => new SelectListItem(x.Name, x.Id.ToString()));
 
+            return PartialView("~/Views/Home/Quotes/_QuoteProductQuoteSelect.cshtml", quoteSelectItems);
+        }
 
         [HttpPost]
         public IActionResult UpdateActiveStatus(int id, bool isActive, int customerId)
