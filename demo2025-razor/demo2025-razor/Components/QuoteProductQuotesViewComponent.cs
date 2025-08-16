@@ -1,10 +1,12 @@
 ﻿using demo2025_razor.Interfaces;
+using demo2025_razor.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace demo2025_razor.Views.ViewComponents
+namespace demo2025_razor.Components
 {
     public class QuoteProductQuotesViewComponent: ViewComponent
     {
+
         private IDemo3Repository _demo3Repository;
         public QuoteProductQuotesViewComponent(IDemo3Repository demo3Repository)
         {
@@ -14,13 +16,20 @@ namespace demo2025_razor.Views.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync(int quoteProductId, int customerId)
         {
             var quotes = _demo3Repository.Quotes
-                .Where(q => q.Customer.Id == customerId && q.QuoteProducts.Where(x => x.Id == quoteProductId).Any())
-                .Select(q => new
+                .Where(q => q.Customer.Id == customerId)// && q.QuoteProducts.Where(x => x.Id == quoteProductId).Any())
+                .Select(q => new QuoteProductsQuotesSelectItemModel
                 {
-                    q.Id,
-                    q.Name
+                    Id = q.Id,
+                    Name = q.Name
                 })
                 .ToList();
+
+            var quotes1 = _demo3Repository.Quotes
+                .Where(q => q.Customer.Id == customerId)
+                .ToList();
+
+
+            Console.WriteLine();
             return await Task.FromResult(View(quotes));
         }
     }

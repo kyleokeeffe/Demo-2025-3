@@ -63,7 +63,7 @@
              $.ajax({
                 url: '@Url.Action("AddNewQuote", "Home")',
                 type: 'POST',
-                data: { name: txtVal},
+                data: { name: txtVal, customerId:4},
                 success: function (R) {
                     console.log('succeeded');
                     if (R.success == true) {

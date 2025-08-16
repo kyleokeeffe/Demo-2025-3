@@ -1,0 +1,11 @@
+@model List<QuoteProductsQuotesSelectItemModel>
+
+<div>
+    
+    <ul>
+        @foreach(var item in Model)
+        {
+            <li>@item.Id @item.Name</li>
+        }
+    </ul>
+</div>

@@ -25,7 +25,7 @@
                     <td>@qp.Product</td>
                     <td>@qp.CustomPrice</td>
                     <td>
-                        @await Component.InvokeAsync("QuoteProductQuotesComponent", new {quoteProductId=qp.Id,customerId = qp.Customer.Id})
+                        @await Component.InvokeAsync("QuoteProductQuotes", new {quoteProductId=qp.Id,customerId = qp.Customer.Id})
                     </td>
             </tr>
             }

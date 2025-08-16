@@ -127,7 +127,7 @@ namespace demo2025_razor.Controllers
 
 
         [HttpPost]
-        public IActionResult AddNewQuote(string name)
+        public IActionResult AddNewQuote(string name, int customerId)
         {
             try
             {
@@ -137,7 +137,8 @@ namespace demo2025_razor.Controllers
                 //   save context 
                 _repo.AddNewQuote(new QuoteViewModel { 
                     Id = _repo.Quotes.Any()?_repo.Quotes.Max(q => q.Id) + 1:1, 
-                    Name = name });
+                    Name = name,
+                Customer = _repo.Customers.Where(x=>x.Id==customerId).FirstOrDefault()});
                
                     // Return success
 
