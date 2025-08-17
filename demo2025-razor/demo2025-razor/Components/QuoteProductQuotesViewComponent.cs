@@ -1,6 +1,7 @@
 ﻿using demo2025_razor.Interfaces;
 using demo2025_razor.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace demo2025_razor.Components
 {
@@ -17,16 +18,12 @@ namespace demo2025_razor.Components
         {
             var quotes = _demo3Repository.Quotes
                 .Where(q => q.Customer.Id == customerId)// && q.QuoteProducts.Where(x => x.Id == quoteProductId).Any())
-                .Select(q => new QuoteProductsQuotesSelectItemModel
+                .Select(q => new SelectListItem
                 {
-                    Id = q.Id,
-                    Name = q.Name
-                })
-                .ToList();
+                    Value = q.Id.ToString(),
+                    Text = q.Name
+                }).ToList();
 
-            var quotes1 = _demo3Repository.Quotes
-                .Where(q => q.Customer.Id == customerId)
-                .ToList();
 
 
             Console.WriteLine();

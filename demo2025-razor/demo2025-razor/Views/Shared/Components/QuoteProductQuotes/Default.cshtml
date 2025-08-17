@@ -1,11 +1,12 @@
-@model List<QuoteProductsQuotesSelectItemModel>
+@model List<SelectListItem>
 
 <div>
     
-    <ul>
+    <select id="quoteProductsQuotesSelect" class="form-select">
+
         @foreach(var item in Model)
         {
-            <li>@item.Id @item.Name</li>
+            <option value="@item.Value">@item.Text</option>
         }
-    </ul>
+    </select>
 </div>
