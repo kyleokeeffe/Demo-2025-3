@@ -1,5 +1,6 @@
 ﻿using demo2025_razor.Interfaces;
 using demo2025_razor.Models;
+using demo2025_razor.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -24,10 +25,15 @@ namespace demo2025_razor.Components
                     Text = q.Name
                 }).ToList();
 
+            var viewModel = new QuoteProductQuotesViewModel
+            {
+                Quotes = quotes,
+                OptionId = $"quoteProductQuotesSelect_{quoteProductId}",
+                QuoteProductId = quoteProductId,
+                CustomerId = customerId
+            };
 
-
-            Console.WriteLine();
-            return await Task.FromResult(View(quotes));
+            return await Task.FromResult(View(viewModel));
         }
     }
 }

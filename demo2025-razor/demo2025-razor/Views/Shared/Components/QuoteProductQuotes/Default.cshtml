@@ -1,12 +1,33 @@
-@model List<SelectListItem>
+@model demo2025_razor.ViewModels.QuoteProductQuotesViewModel
 
 <div>
-    
-    <select id="quoteProductsQuotesSelect" class="form-select">
-
-        @foreach(var item in Model)
+   
+    <select id="@Model.OptionId"
+            class="form-select" 
+        data-quote-product-id="@Model.QuoteProductId"
+        data-customer-id="@Model.CustomerId">
+        @foreach(var item in Model.Quotes)
         {
             <option value="@item.Value">@item.Text</option>
         }
     </select>
 </div>
+
+<script>
+    $(document).ready(function(){
+        console.log('Component loaded for: @Model.OptionId');
+       
+         $('#@Model.OptionId').on('change', function(){
+             debugger;
+             console.log('Selection changed in component');
+             
+             const selectedValue = $(this).val();
+             const customerId = $(this).data('customer-id');
+             const quoteProductId = $(this).data('quote-product-id');
+             
+             console.log('Selected Quote:', selectedValue);
+             console.log('Customer ID:', customerId);
+             console.log('Quote Product ID:', quoteProductId);
+        });
+    });
+</script>
