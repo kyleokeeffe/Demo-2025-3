@@ -17,17 +17,49 @@
     $(document).ready(function(){
         console.log('Component loaded for: @Model.OptionId');
        
-         $('#@Model.OptionId').on('change', function(){
-             debugger;
+         $('#@Model.OptionId').on('change', onQuoteSelectChanged);
+
+        function onQuoteSelectChanged(){
+            debugger;
              console.log('Selection changed in component');
-             
+
              const selectedValue = $(this).val();
              const customerId = $(this).data('customer-id');
              const quoteProductId = $(this).data('quote-product-id');
              
+              $.ajax({
+                url: '@Url.Action("AddProductToQuote", "Home")',
+                type: 'POST',
+                data: { name: txtVal, customerId:4},
+                success: function (R) {
+                    console.log('succeeded');
+                    if (R.success == true) {
+                        console.log('success:'+R.message);
+                        refreshQuotesTable();
+                    } else if (R.success == false) {
+                        console.log('failed: ' + R.message);
+                        //$('[data-product-id="' + id + '"]').prop('checked', !isActive);
+                    }
+                },
+                error: function (R) {
+                    console.log('failed: ' + R.message);
+                    $('[data-product-id="' + id + '"]').prop('checked', !isActive);
+                }
+            });
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             debugger;
              console.log('Selected Quote:', selectedValue);
              console.log('Customer ID:', customerId);
              console.log('Quote Product ID:', quoteProductId);
-        });
+        };
     });
 </script>

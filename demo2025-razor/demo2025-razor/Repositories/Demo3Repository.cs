@@ -1,5 +1,6 @@
 ﻿using demo2025_razor.Interfaces;
 using demo2025_razor.ViewModels;
+using System.Text.Json;
 
 namespace demo2025_razor.Repositories
 {
@@ -77,7 +78,19 @@ namespace demo2025_razor.Repositories
         {
             if (staticProducts == null)
             {
-                staticProducts = GetInitialProducts();
+                if (File.Exists("products.json"))
+                {
+                    try
+                    {
+                        staticProducts = GetProductsLocal();
+                    }
+                    catch (Exception ex)
+                    {
+                        staticProducts = GetInitialProducts();
+                    }
+                }
+                else
+                    staticProducts = GetInitialProducts();
             }
             this.Products = staticProducts.AsQueryable();
         }
@@ -85,7 +98,19 @@ namespace demo2025_razor.Repositories
         {
             if (staticQuotes == null)
             {
-                staticQuotes = GetInitialQuotes();
+                if (File.Exists("quotes.json"))
+                {
+                    try
+                    {
+                        staticQuotes = GetQuotesLocal();
+                    }
+                    catch (Exception ex)
+                    {
+                        staticQuotes = GetInitialQuotes();
+                    }
+                }
+                else
+                    staticQuotes = GetInitialQuotes();
             }
             this.Quotes = staticQuotes.AsQueryable();
         }
@@ -93,16 +118,39 @@ namespace demo2025_razor.Repositories
         {
             if (staticQuoteProducts == null)
             {
-                staticQuoteProducts = GetInitialQuoteProducts();
+                if (File.Exists("quoteProducts.json"))
+                {
+                    try
+                    {
+                        staticQuoteProducts = GetQuoteProductsLocal();
+                    }
+                    catch (Exception ex)
+                    {
+                        staticQuoteProducts = GetInitialQuoteProducts();
+                    }
+                }
+                else
+                    staticQuoteProducts = GetInitialQuoteProducts();
             }
             this.QuoteProducts = staticQuoteProducts.AsQueryable();
         }
         private void CustomersInit()
         {
-            
             if (staticCustomers == null)
             {
-                staticCustomers = GetInitialCustomers();
+                if (File.Exists("customers.json"))
+                {
+                    try
+                    {
+                        staticCustomers = GetCustomersLocal();
+                    }
+                    catch (Exception ex)
+                    {
+                        staticCustomers = GetInitialCustomers();
+                    }
+                }
+                else
+                    staticCustomers = GetInitialCustomers();
             }
             this.Customers = staticCustomers.AsQueryable();
         }
@@ -143,17 +191,96 @@ namespace demo2025_razor.Repositories
         }
         public void AddNewQuote(QuoteViewModel quote)
         {
-   
+
             staticQuotes.Add(quote);
-           // return staticQuotes.AsQueryable();
-           
+            UpdateQuotesLocal();
+            // return staticQuotes.AsQueryable();
+
         }
         public void AddNewQuoteProduct(QuoteProductViewModel quoteProduct)
         {
 
             staticQuoteProducts.Add(quoteProduct);
+            UpdateQuoteProductsLocal();
             // return staticQuotes.AsQueryable();
 
+        }
+
+        public List<ProductViewModel>? GetProductsLocal()
+        {
+            var productList = File.ReadAllText("products.json");
+            return JsonSerializer.Deserialize<List<ProductViewModel>>(productList);
+        }
+        public List<QuoteViewModel> GetQuotesLocal()
+        {
+            try
+            {
+
+                var quoteList = File.ReadAllText("quotes.json");
+                return JsonSerializer.Deserialize<List<QuoteViewModel>>(quoteList);
+            }
+            catch (Exception ex)
+            {
+                return new List<QuoteViewModel>();
+                throw new Exception("Error reading quotes from local file.", ex);
+
+            }
+        }
+        public List<QuoteProductViewModel> GetQuoteProductsLocal()
+        {
+            try
+            {
+                var quoteProductList = File.ReadAllText("quoteProducts.json");
+                return JsonSerializer.Deserialize<List<QuoteProductViewModel>>(quoteProductList);
+            }
+            catch (Exception ex)
+            {
+                return new List<QuoteProductViewModel>();
+                throw new Exception("Error reading quote products from local file.", ex);
+            }
+        }
+        public List<CustomerViewModel>? GetCustomersLocal()
+        {
+            try
+            {
+                var customerList = File.ReadAllText("customers.json");
+                return JsonSerializer.Deserialize<List<CustomerViewModel>>(customerList);
+            }
+            catch (Exception ex)
+            {
+                return new List<CustomerViewModel>();
+                throw new Exception("Error reading customers from local file.", ex);
+            }
+        }
+        public void UpdateProductsLocal()
+        {
+            var productLIst = JsonSerializer.Serialize(staticProducts);
+
+            if (File.Exists("products.json"))
+                File.Delete("products.json");
+
+            File.WriteAllText(productLIst, "products.json");
+        }
+        public void UpdateQuotesLocal()
+        {
+            var quoteList = JsonSerializer.Serialize(staticQuotes);
+            if (File.Exists("quotes.json"))
+                File.Delete("quotes.json");
+            File.WriteAllText(quoteList, "quotes.json");
+        }
+        public void UpdateQuoteProductsLocal()
+        {
+            var quoteProductList = JsonSerializer.Serialize(staticQuoteProducts);
+            if (File.Exists("quoteProducts.json"))
+                File.Delete("quoteProducts.json");
+            File.WriteAllText(quoteProductList, "quoteProducts.json");
+        }
+        public void UpdateCustomersLocal()
+        {
+            var customerList = JsonSerializer.Serialize(staticCustomers);
+            if (File.Exists("customers.json"))
+                File.Delete("customers.json");
+            File.WriteAllText(customerList, "customers.json");
         }
     }
 }

@@ -160,7 +160,24 @@ namespace demo2025_razor.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult AddProductToQuote(int quoteId, int quoteProductId)
+        {
 
+            var thisQ = _repo.Quotes?.Where(x => x.Id == quoteId).FirstOrDefault();
+
+            if (thisQ !=null)
+            {
+                thisQ.QuoteProducts.ToList().Add(new QuoteProductViewModel
+                {
+                    Id = _repo.QuoteProducts.Any() ? _repo.QuoteProducts.Max(x => x.Id) + 1 : 1,
+                    
+                });
+            }
+
+            var response = Json(new { success = false, message = "Error adding product to quote." });
+            return response;
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
